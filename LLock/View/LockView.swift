@@ -65,6 +65,7 @@ struct LockView: View {
                                 appManager.currentView = .home
                             }
                         }
+                        
                     } else {
                         print("Erro ao autenticar")
                     }
