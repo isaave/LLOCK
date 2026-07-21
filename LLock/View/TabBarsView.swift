@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct TabBars: View {
-    @State var selectedTab: Tabs = .key
+    @State private var selectedTab: Tabs = .key
     
     var body: some View {
         TabView(selection: $selectedTab) {
             
             Tab.init("Senhas", systemImage: "key", value: .key) {
+                SenhasView() // Chama a view que já contém o título "Senhas"
             }
             
             Tab.init("Favoritas", systemImage: "star", value: .favorites) {
-                FavoritasView()
+                FavoritasView() // Chama a view que contém o título "Favoritas"
             }
             
             Tab.init("Segurança", systemImage: "exclamationmark.circle", value: .security) {
@@ -36,7 +37,6 @@ struct TabBars: View {
     }
 }
 
-// MARK: - Preview
 #Preview {
     TabBars()
         .environmentObject(AppManager())
