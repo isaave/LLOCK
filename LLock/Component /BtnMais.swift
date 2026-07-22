@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct BtnMais: View {
+    @EnvironmentObject var gerenciador: GerenciadorDeSenhas
+    
     @State private var mostrarSheet: Bool = false
-  
+    
     @State private var titulo: String = ""
     @State private var usuario: String = ""
     @State private var senha: String = ""
     @State private var site: String = ""
-    
+    @State private var tipoSelecionado: TipoSenha = .senha
     
     let nomeDoAssetMascote: String = "Icone"
     
@@ -23,9 +25,9 @@ struct BtnMais: View {
             mostrarSheet = true
         }) {
             Image(systemName: "plus")
-                .font(Font.custom("SF Pro Text", size: 30).weight(.medium))
+                .font(Font.custom("SF Pro Text", size: 20).weight(.medium))
                 .foregroundColor(Color("BtnColor liquid glass"))
-                .frame(width: 64, height: 64)
+                .frame(width: 36, height: 36) 
                 .glassEffect()
         }
         .buttonStyle(PlainButtonStyle())
@@ -47,14 +49,25 @@ struct BtnMais: View {
                     
                     Spacer()
                     
-                    Text("Nova Senha")
+                    Text(tipoSelecionado == .wifi ? "Nova Rede Wi-Fi" : "Nova Senha")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.primary)
                     
                     Spacer()
                     
                     Button(action: {
-                        print("Salvando senha...")
+                        gerenciador.adicionar(
+                            nome: titulo,
+                            usuario: usuario,
+                            senha: senha,
+                            site: site,
+                            tipo: tipoSelecionado
+                        )
+                        titulo = ""
+                        usuario = ""
+                        senha = ""
+                        site = ""
+                        tipoSelecionado = .senha
                         mostrarSheet = false
                     }) {
                         Image(systemName: "checkmark")
@@ -72,6 +85,14 @@ struct BtnMais: View {
                 ScrollView {
                     VStack(spacing: 24) {
                         
+                        // MARK: - Seletor de Tipo
+                        Picker("Tipo", selection: $tipoSelecionado) {
+                            Text("Senha").tag(TipoSenha.senha)
+                            Text("Wi-Fi").tag(TipoSenha.wifi)
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal, 16)
+                        
                         VStack(spacing: 16) {
                             
                             VStack(spacing: 8) {
@@ -81,7 +102,7 @@ struct BtnMais: View {
                                     .frame(width: 80, height: 80)
                                     .padding(.bottom, 4)
                                 
-                                TextField("Título", text: $titulo)
+                                TextField(tipoSelecionado == .wifi ? "Nome da Rede" : "Título", text: $titulo)
                                     .font(.system(size: 28, weight: .bold))
                                     .multilineTextAlignment(.center)
                                     .foregroundColor(.gray)
@@ -89,21 +110,23 @@ struct BtnMais: View {
                             .padding(.top, 8)
                             .padding(.bottom, 12)
                             
-                            // Campo: Nome de Usuário
-                            HStack {
-                                Text("Nome de Usuário")
-                                    .foregroundColor(.primary)
-                                Spacer()
-                                TextField("usuário", text: $usuario)
-                                    .multilineTextAlignment(.trailing)
-                                    .foregroundColor(.gray)
-                                    .textInputAutocapitalization(.never)
+                            // Campo: Nome de Usuário (só faz sentido pra login normal)
+                            if tipoSelecionado == .senha {
+                                HStack {
+                                    Text("Nome de Usuário")
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    TextField("usuário", text: $usuario)
+                                        .multilineTextAlignment(.trailing)
+                                        .foregroundColor(.gray)
+                                        .textInputAutocapitalization(.never)
+                                }
+                                Divider()
                             }
-                            Divider()
                             
                             // Campo: Senha
                             HStack {
-                                Text("Senha")
+                                Text(tipoSelecionado == .wifi ? "Senha da Rede" : "Senha")
                                     .foregroundColor(.primary)
                                 Spacer()
                                 SecureField("", text: $senha)
@@ -112,15 +135,15 @@ struct BtnMais: View {
                             }
                             Divider()
                             
-                            // Campo: Site
+                            // Campo: Site / Segurança
                             HStack {
-                                Text("Site")
+                                Text(tipoSelecionado == .wifi ? "Segurança" : "Site")
                                     .foregroundColor(.primary)
                                 Spacer()
-                                TextField("example.com", text: $site)
+                                TextField(tipoSelecionado == .wifi ? "WPA2 Pessoal" : "example.com", text: $site)
                                     .multilineTextAlignment(.trailing)
                                     .foregroundColor(.gray)
-                                    .keyboardType(.URL)
+                                    .keyboardType(tipoSelecionado == .wifi ? .default : .URL)
                                     .textInputAutocapitalization(.never)
                             }
                         }
@@ -144,5 +167,6 @@ struct BtnMais: View {
             .ignoresSafeArea()
         
         BtnMais()
+            .environmentObject(GerenciadorDeSenhas())
     }
 }

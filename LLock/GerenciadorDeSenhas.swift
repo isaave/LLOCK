@@ -43,6 +43,16 @@ class GerenciadorDeSenhas: ObservableObject {
         senhas.removeAll { $0.id == item.id }
     }
 
+    func adicionar(nome: String, usuario: String, senha: String, site: String, tipo: TipoSenha = .senha) {
+        let nova = SenhaItem(nome: nome, usuario: usuario, senha: senha, site: site, tipo: tipo)
+        senhas.append(nova)
+    }
+
+    func agrupadasPorLetra(tipo: TipoSenha? = nil) -> [String: [SenhaItem]] {
+        let filtradas = tipo == nil ? ativas : ativas.filter { $0.tipo == tipo }
+        return Dictionary(grouping: filtradas) { String($0.nome.prefix(1)).uppercased() }
+    }
+    
     var ativas: [SenhaItem] { senhas.filter { !$0.isApagada } }
     var favoritas: [SenhaItem] { senhas.filter { $0.isFavorito && !$0.isApagada } }
     var apagadas: [SenhaItem] { senhas.filter { $0.isApagada } }

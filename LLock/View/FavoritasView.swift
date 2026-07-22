@@ -11,15 +11,36 @@ struct FavoritasView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // Visual nativo da Apple para telas sem conteúdo ainda
-                ContentUnavailableView(
-                    "Nenhuma Favorita",
-                    systemImage: "star.bubble",
-                    description: Text("Toque na estrela ao visualizar uma senha para que ela apareça rapidamente nesta aba.")
-                )
+                Spacer()
+                
+                // Conteúdo Central
+                VStack(spacing: 16) {
+                    // ZStack corrigido com círculo de fundo
+                    ZStack {
+                        Circle()
+                            .fill(Color.yellow.opacity(0.15))
+                            .frame(width: 56, height: 56)
+                        
+                        Image(systemName: "star.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(.yellow)
+                    }
+                    
+                    Text("Favoritas")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color("H1"))
+                    
+                    Text("Toque na estrela em qualquer senha\npara favoritar.")
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.secondary)
+                        .lineSpacing(2)
+                }
+                .padding(.horizontal, 32)
+                
+                Spacer()
             }
-            // O título da navegação deve ficar colado na view que está DENTRO da NavigationStack
-            .navigationTitle("Favoritas")
         }
     }
 }

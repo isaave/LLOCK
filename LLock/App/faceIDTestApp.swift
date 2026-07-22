@@ -2,12 +2,11 @@ import SwiftUI
 
 @main
 struct faceIDTestApp: App {
-    // Cria uma instância do gerenciador de telas
     @StateObject private var appManager = AppManager()
+    @StateObject private var gerenciador = GerenciadorDeSenhas() 
     
     var body: some Scene {
         WindowGroup {
-            // Controla qual tela exibir com base no estado atual
             Group {
                 if appManager.currentView == .lock {
                     LockView()
@@ -15,7 +14,8 @@ struct faceIDTestApp: App {
                     TabBarsView()
                 }
             }
-            .environmentObject(appManager) // Injeta o gerenciador em todas as views
+            .environmentObject(appManager)
+            .environmentObject(gerenciador)
         }
     }
 }

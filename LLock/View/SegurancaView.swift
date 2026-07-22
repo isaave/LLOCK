@@ -12,35 +12,65 @@ struct SegurancaView: View {
     
     var body: some View {
         NavigationStack {
-            if gerenciador.ativas.isEmpty {
-                ContentUnavailableView(
-                    "Nada para Analisar",
-                    systemImage: "checkmark.shield",
-                    description: Text("Cadastre suas senhas para que a gente possa avaliar a segurança delas.")
-                )
-                .navigationTitle("Segurança")
-            } else {
-                List {
-                    Section(header: Text("Análise de Vulnerabilidade")) {
-                        HStack {
-                            Image(systemName: "checkmark.shield.fill")
-                                .foregroundColor(.green)
-                            Text("Nenhuma senha vazada")
+            Group {
+                if gerenciador.ativas.isEmpty {
+                    // MARK: - Layout Estado Vazio
+                    VStack {
+                        Spacer()
+                        
+                        VStack(spacing: 16) {
+                            // Ícone do Escudo com Círculo ao fundo
+                            ZStack {
+                                Circle()
+                                    .fill(Color.blue.opacity(0.15))
+                                    .frame(width: 56, height: 56)
+                                
+                                Image(systemName: "exclamationmark.shield.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.blue)
+                            }
+                            
+                            // Título
+                            Text("Segurança")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color("H1"))
+                            
+                            // Descrição
+                            Text("Cadastre suas senhas para que a gente\npossa avaliar a segurança delas.")
+                                .font(.subheadline)
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.secondary)
+                                .lineSpacing(2)
                         }
-                        HStack {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundColor(.yellow)
-                            Text("2 senhas repetidas ou fracas")
-                        }
+                        .padding(.horizontal, 32)
+                        
+                        Spacer()
                     }
-                    
-                    Section(header: Text("Configurações Gerais")) {
-                        Toggle("Autenticação Biométrica", isOn: .constant(true))
-                            .disabled(true) // Apenas visual por enquanto
+                } else {
+                    // MARK: - Layout Com Dados
+                    List {
+                        Section(header: Text("Análise de Vulnerabilidade")) {
+                            HStack {
+                                Image(systemName: "checkmark.shield.fill")
+                                    .foregroundColor(.green)
+                                Text("Nenhuma senha vazada")
+                            }
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.yellow)
+                                Text("2 senhas repetidas ou fracas")
+                            }
+                        }
+                        
+                        Section(header: Text("Configurações Gerais")) {
+                            Toggle("Autenticação Biométrica", isOn: .constant(true))
+                                .disabled(true)
+                        }
                     }
                 }
-                .navigationTitle("Segurança")
             }
+            
         }
     }
 }

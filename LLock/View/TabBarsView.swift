@@ -9,28 +9,36 @@ import SwiftUI
 
 struct TabBarsView: View {
     @State private var selectedTab: Tabs = .key
-    
+    @State private var searchString = ""
+
     var body: some View {
         TabView(selection: $selectedTab) {
             
-            Tab.init("Senhas", systemImage: "key", value: .key) {
-                SenhasView() // Chama a view que já contém o título "Senhas"
+            Tab("Senhas", systemImage: "key", value: .key) {
+                SenhasView()
             }
             
-            Tab.init("Favoritas", systemImage: "star", value: .favorites) {
+            Tab("Favoritas", systemImage: "star", value: .favorites) {
                 FavoritasView()
             }
             
-            Tab.init("Segurança", systemImage: "exclamationmark.circle", value: .security) {
+            Tab("Segurança", systemImage: "exclamationmark.circle", value: .security) {
                 SegurancaView()
             }
             
-            Tab.init("Apagadas", systemImage: "trash", value: .extinguished) {
+            Tab("Apagadas", systemImage: "trash", value: .extinguished) {
                 ApagadasView()
             }
             
-            Tab.init(value: .search, role: .search) {
-                BuscaView()
+            // Tab de busca inline sem precisar de outra View
+            Tab(value: .search, role: .search) {
+                NavigationStack {
+                    List {
+                        Text("Search screen")
+                    }
+                    .navigationTitle("Search")
+                    .searchable(text: $searchString)
+                }
             }
         }
         .tint(Color("H1"))

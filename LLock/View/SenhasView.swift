@@ -11,8 +11,14 @@ struct SenhasView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var gerenciador: GerenciadorDeSenhas
     
+    @State private var filtroSelecionado: Int = 0 // 0 = Todas, 1 = Wi-Fi
+    
+    var tipoFiltro: TipoSenha? {
+        filtroSelecionado == 0 ? nil : .wifi
+    }
+    
     var secoes: [String] {
-        gerenciador.agrupadasPorLetra.keys.sorted()
+        gerenciador.agrupadasPorLetra(tipo: tipoFiltro).keys.sorted()
     }
     
     var body: some View {
@@ -28,7 +34,6 @@ struct SenhasView: View {
                 
                 HStack(spacing: 8) {
                     BtnMais()
-                    
                     BtnFiltrar { print("Opções de filtro") }
                 }
             }
@@ -36,15 +41,67 @@ struct SenhasView: View {
             .padding(.top, 8)
             .padding(.bottom, 8)
             
-            // MARK: - Lista
-            if gerenciador.ativas.isEmpty {
-                ContentUnavailableView(
-                    "Nenhuma Senha",
-                    systemImage: "key.fill",
-                    description: Text("Toque no + para adicionar sua primeira senha.")
-                )
-                Spacer()
+            // MARK: - Segmented Control (Picker)
+            Picker("Filtro", selection: $filtroSelecionado) {
+                Text("Todas").tag(0)
+                Text("Wi-Fi").tag(1)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+            
+            // MARK: - Lista / Conteúdo Principal
+            if gerenciador.agrupadasPorLetra(tipo: tipoFiltro).isEmpty {
+                
+                // MARK: - Layout Estado Vazio Padronizado
+                VStack {
+                    Spacer()
+                    
+                    VStack(spacing: 16) {
+                        // MARK: Círculo e Ícone Padronizados
+                        ZStack {
+                            if tipoFiltro == .wifi {
+                                // Estilo para Wi-Fi (Azul suave)
+                                Circle()
+                                    .fill(Color.purple.opacity(0.12))
+                                    .frame(width: 64, height: 64)
+                                
+                                Image(systemName: "wifi")
+                                    .font(.system(size: 28, weight: .semibold))
+                                    .foregroundColor(Color("H1"))
+                            } else {
+                                // Estilo para Senhas Gerais (AccentColor/Roxo suave)
+                                Circle()
+                                    .fill(Color.purple.opacity(0.15))
+                                    .frame(width: 64, height: 64)
+                                
+                                Image(systemName: "key.fill")
+                                    .font(.system(size: 28))
+                                    .foregroundColor(Color("H1"))
+                            }
+                        }
+                        .padding(.bottom, 8)
+                        
+                        // MARK: Textos Padronizados
+                        Text(tipoFiltro == .wifi ? "Nenhuma Rede Wi-Fi" : "Nenhuma Senha")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("H1"))
+                        
+                        Text("Toque no botão + no topo para\nadicionar sua primeira credencial.")
+                            .font(.subheadline)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.secondary)
+                            .lineSpacing(2)
+                    }
+                    .padding(.horizontal, 40)
+                    
+                    Spacer()
+                    Spacer() // Spacer extra para empurrar levemente para cima
+                }
+                
             } else {
+                // MARK: - Lista Com Dados
                 List {
                     ForEach(secoes, id: \.self) { inicial in
                         Section(header: Text(inicial)
@@ -52,7 +109,7 @@ struct SenhasView: View {
                             .fontWeight(.semibold)
                             .foregroundColor(.gray)
                         ) {
-                            ForEach(gerenciador.agrupadasPorLetra[inicial] ?? []) { item in
+                            ForEach(gerenciador.agrupadasPorLetra(tipo: tipoFiltro)[inicial] ?? []) { item in
                                 SenhaRowView(item: item) {
                                     gerenciador.alternarFavorito(item)
                                 }
@@ -64,7 +121,7 @@ struct SenhasView: View {
                     }
                 }
                 .listStyle(.plain)
-                .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                // Mantendo o estilo do índice lateral da lista original
                 .listSectionIndexVisibility(.visible)
             }
         }
