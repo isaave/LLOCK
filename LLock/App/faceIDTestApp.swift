@@ -12,7 +12,7 @@ struct faceIDTestApp: App {
                 if appManager.currentView == .lock {
                     LockView()
                 } else {
-                    HomeView()
+                    TabBarsView()
                 }
             }
             .environmentObject(appManager) // Injeta o gerenciador em todas as views

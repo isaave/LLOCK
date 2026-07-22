@@ -4,7 +4,6 @@ import LocalAuthentication
 struct LockView: View {
     @EnvironmentObject var appManager: AppManager
     
-
     @State private var isUnlockedSuccess: Bool = false
     
     var body: some View {
@@ -15,13 +14,20 @@ struct LockView: View {
             VStack {
                 Spacer()
                 
-                
-                Image(isUnlockedSuccess ? "LLock.mascotedestracado" : "LLock.mascotetrancado")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 380, height: 380)
-                
-               
+                // MARK: - Mascote com tamanho e posição idênticos
+                ZStack {
+                    Image("LLock.mascotetrancado")
+                        .resizable()
+                        .scaledToFit()
+                        .opacity(isUnlockedSuccess ? 0 : 1)
+                    
+                    Image("LLock.mascotedestracado")
+                        .resizable()
+                        .scaledToFit()
+                        .opacity(isUnlockedSuccess ? 1 : 0)
+                }
+                .frame(width: 272, height: 276) // Trava o mesmo container para os dois
+
                 VStack(spacing: 6) {
                     Text("O LLOCK ESTÁ")
                     Text(isUnlockedSuccess ? "DESBLOQUEADO" : "BLOQUEADO")
@@ -34,13 +40,19 @@ struct LockView: View {
                 .frame(width: 359, height: 152, alignment: .top)
                 .multilineTextAlignment(.center)
                 
-                BtnDesbloquear(
-                    title: "Desbloquear",
-                    backgroundColorName: "BtnColor"
-                ) {
-                    authenticateUser()
+                if !isUnlockedSuccess {
+                    BtnDesbloquear(
+                        title: "Desbloquear",
+                        backgroundColorName: "BtnColor"
+                    ) {
+                        authenticateUser()
+                    }
+                    .padding(.bottom, 100)
+                    .transition(.opacity)
+                } else {
+                    Spacer()
+                        .frame(height: 150)
                 }
-                .padding(.bottom, 100)
             }
         }
     }
@@ -59,7 +71,6 @@ struct LockView: View {
                             self.isUnlockedSuccess = true
                         }
                         
-                     
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                             withAnimation(.easeInOut) {
                                 appManager.currentView = .home

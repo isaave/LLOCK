@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TabBars: View {
+struct TabBarsView: View {
     @State private var selectedTab: Tabs = .key
     
     var body: some View {
@@ -18,7 +18,7 @@ struct TabBars: View {
             }
             
             Tab.init("Favoritas", systemImage: "star", value: .favorites) {
-                FavoritasView() // Chama a view que contém o título "Favoritas"
+                FavoritasView()
             }
             
             Tab.init("Segurança", systemImage: "exclamationmark.circle", value: .security) {
@@ -38,6 +38,7 @@ struct TabBars: View {
 }
 
 #Preview {
-    TabBars()
+    TabBarsView()
         .environmentObject(AppManager())
+        .environmentObject(GerenciadorDeSenhas())
 }
