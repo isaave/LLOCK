@@ -25,7 +25,7 @@ struct LockView: View {
                         .scaledToFit()
                         .opacity(isUnlockedSuccess ? 1 : 0)
                 }
-                .frame(width: 272, height: 276) // Trava o mesmo container para os dois
+                .frame(width: 272, height: 276) 
 
                 VStack(spacing: 6) {
                     Text("O LLOCK ESTÁ")

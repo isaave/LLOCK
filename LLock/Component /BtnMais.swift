@@ -20,6 +20,16 @@ struct BtnMais: View {
     
     let nomeDoAssetMascote: String = "Icone"
     
+    // MARK: - Validação
+    private var formularioValido: Bool {
+        let tituloValido = !titulo.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let senhaValida = !senha.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let siteValido = !site.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let usuarioValido = tipoSelecionado == .wifi || !usuario.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        
+        return tituloValido && senhaValida && siteValido && usuarioValido
+    }
+    
     var body: some View {
         Button(action: {
             mostrarSheet = true
@@ -44,15 +54,17 @@ struct BtnMais: View {
                     
                     BtnCheck {
                         gerenciador.adicionar(
-                            nome: titulo,
-                            usuario: usuario,
+                            nome: titulo.trimmingCharacters(in: .whitespacesAndNewlines),
+                            usuario: usuario.trimmingCharacters(in: .whitespacesAndNewlines),
                             senha: senha,
-                            site: site,
+                            site: site.trimmingCharacters(in: .whitespacesAndNewlines),
                             tipo: tipoSelecionado
                         )
                         limparCampos()
                         mostrarSheet = false
                     }
+                    .disabled(!formularioValido)
+                    .opacity(formularioValido ? 1 : 0.4)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 20)

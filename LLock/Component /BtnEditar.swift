@@ -20,7 +20,8 @@ struct BtnEditar: View {
                 .foregroundColor(Color("BtnColor liquid glass"))
                 .padding(.horizontal, 16)
                 .frame(height: 40)
-                .glassEffect(.regular, in: .capsule)
+                .clipShape(Capsule())
+                .glassEffect()
         }
         .buttonStyle(PlainButtonStyle())
     }

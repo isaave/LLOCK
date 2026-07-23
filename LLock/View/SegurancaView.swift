@@ -82,13 +82,11 @@ struct SegurancaView: View {
                         
                         Spacer()
                         
-                        BtnFiltrar { print("Opções") }
-                    }
+                        BtnFiltrar(onTitulo: { print("Opções") })                    }
                     .padding(.horizontal)
                     .padding(.top, 8)
                     .padding(.bottom, 8)
                     
-                    // MARK: - Lista de Problemas
                     List {
                         ForEach(gerenciador.senhasComProblema) { item in
                             NavigationLink(destination: DetalheSenhaView(item: item)) {
