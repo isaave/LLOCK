@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BtnSelecionar: View {
-    var titulo: String = "Editar"
+    var titulo: String = "Selecionar"
     var action: (() -> Void)? = nil
     
     var body: some View {
@@ -29,5 +29,5 @@ struct BtnSelecionar: View {
 }
 
 #Preview {
-    BtnSelecionar(titulo: "Editar")
+    BtnSelecionar(titulo: "Selecionar")
 }

@@ -30,14 +30,11 @@ struct TabBarsView: View {
                 ApagadasView()
             }
             
-            // Tab de busca inline sem precisar de outra View
             Tab(value: .search, role: .search) {
                 NavigationStack {
-                    List {
-                        Text("Search screen")
-                    }
-                    .navigationTitle("Search")
-                    .searchable(text: $searchString)
+                    BuscaView(textoBusca: $searchString)
+                        .navigationTitle("")
+                        .searchable(text: $searchString)
                 }
             }
         }

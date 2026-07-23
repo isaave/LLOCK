@@ -14,7 +14,6 @@ struct LockView: View {
             VStack {
                 Spacer()
                 
-                // MARK: - Mascote com tamanho e posição idênticos
                 ZStack {
                     Image("LLock.mascotetrancado")
                         .resizable()

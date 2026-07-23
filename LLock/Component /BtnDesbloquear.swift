@@ -18,15 +18,13 @@ struct BtnDesbloquear: View {
     }
 }
 
-// CORREÇÃO AQUI: Passando os parâmetros necessários para o Preview funcionar
 #Preview {
     ZStack {
-        // Fundo creme para destacar o botão igual ao seu Figma
         Color("BackGroud").ignoresSafeArea()
         
         BtnDesbloquear(
             title: "Desbloquear",
-            backgroundColorName: "BtnColor" // Usa a cor do seu Assets
+            backgroundColorName: "BtnColor" 
         ) {
             print("Botão testado no preview!")
         }

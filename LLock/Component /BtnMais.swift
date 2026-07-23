@@ -27,7 +27,7 @@ struct BtnMais: View {
             Image(systemName: "plus")
                 .font(Font.custom("SF Pro Text", size: 20).weight(.medium))
                 .foregroundColor(Color("BtnColor liquid glass"))
-                .frame(width: 36, height: 36) 
+                .frame(width: 36, height: 36)
                 .glassEffect()
         }
         .buttonStyle(PlainButtonStyle())
@@ -35,27 +35,14 @@ struct BtnMais: View {
             VStack(spacing: 0) {
                 
                 HStack {
-                    Button(action: {
+                    BtnCancelar {
+                        limparCampos()
                         mostrarSheet = false
-                    }) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color("BtnColor liquid glass"))
-                            .frame(width: 36, height: 36)
-                            .background(Color(.systemGray6))
-                            .glassEffect()
-                            .clipShape(Circle())
                     }
                     
                     Spacer()
                     
-                    Text(tipoSelecionado == .wifi ? "Nova Rede Wi-Fi" : "Nova Senha")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                    
-                    Button(action: {
+                    BtnCheck {
                         gerenciador.adicionar(
                             nome: titulo,
                             usuario: usuario,
@@ -63,19 +50,8 @@ struct BtnMais: View {
                             site: site,
                             tipo: tipoSelecionado
                         )
-                        titulo = ""
-                        usuario = ""
-                        senha = ""
-                        site = ""
-                        tipoSelecionado = .senha
+                        limparCampos()
                         mostrarSheet = false
-                    }) {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(.white)
-                            .frame(width: 36, height: 36)
-                            .background(Color("BtnColor"))
-                            .clipShape(Circle())
                     }
                 }
                 .padding(.horizontal, 20)
@@ -85,7 +61,6 @@ struct BtnMais: View {
                 ScrollView {
                     VStack(spacing: 24) {
                         
-                        // MARK: - Seletor de Tipo
                         Picker("Tipo", selection: $tipoSelecionado) {
                             Text("Senha").tag(TipoSenha.senha)
                             Text("Wi-Fi").tag(TipoSenha.wifi)
@@ -93,9 +68,9 @@ struct BtnMais: View {
                         .pickerStyle(.segmented)
                         .padding(.horizontal, 16)
                         
-                        VStack(spacing: 16) {
+                        VStack(spacing: 0) {
                             
-                            VStack(spacing: 8) {
+                            VStack(spacing: 0) {
                                 Image(nomeDoAssetMascote)
                                     .resizable()
                                     .scaledToFit()
@@ -103,14 +78,13 @@ struct BtnMais: View {
                                     .padding(.bottom, 4)
                                 
                                 TextField(tipoSelecionado == .wifi ? "Nome da Rede" : "Título", text: $titulo)
-                                    .font(.system(size: 28, weight: .bold))
+                                    .font(.system(size: 28, weight: .medium))
                                     .multilineTextAlignment(.center)
                                     .foregroundColor(.gray)
                             }
-                            .padding(.top, 8)
-                            .padding(.bottom, 12)
+                            .padding(.top, 16)
+                            .padding(.bottom, 10)
                             
-                            // Campo: Nome de Usuário (só faz sentido pra login normal)
                             if tipoSelecionado == .senha {
                                 HStack {
                                     Text("Nome de Usuário")
@@ -120,22 +94,24 @@ struct BtnMais: View {
                                         .multilineTextAlignment(.trailing)
                                         .foregroundColor(.gray)
                                         .textInputAutocapitalization(.never)
+                                        .textContentType(.username)
                                 }
+                                .padding(.vertical, 5)
                                 Divider()
                             }
                             
-                            // Campo: Senha
                             HStack {
                                 Text(tipoSelecionado == .wifi ? "Senha da Rede" : "Senha")
                                     .foregroundColor(.primary)
                                 Spacer()
-                                SecureField("", text: $senha)
+                                SecureField("Senha necessária", text: $senha)
                                     .multilineTextAlignment(.trailing)
                                     .foregroundColor(.gray)
+                                    .textContentType(.newPassword)
                             }
+                            .padding(.vertical, 12)
                             Divider()
                             
-                            // Campo: Site / Segurança
                             HStack {
                                 Text(tipoSelecionado == .wifi ? "Segurança" : "Site")
                                     .foregroundColor(.primary)
@@ -145,19 +121,35 @@ struct BtnMais: View {
                                     .foregroundColor(.gray)
                                     .keyboardType(tipoSelecionado == .wifi ? .default : .URL)
                                     .textInputAutocapitalization(.never)
+                                    .textContentType(tipoSelecionado == .wifi ? nil : .URL)
                             }
+                            .padding(.vertical, 12)
                         }
-                        .padding(20)
+                        .padding(.horizontal, 16)
                         .background(Color("BackgroudCard"))
-                        .cornerRadius(24)
+                        .cornerRadius(16)
                         .padding(.horizontal, 16)
                     }
                     .padding(.top, 8)
                 }
+                
+                Spacer(minLength: 16)
+                
+                
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
             }
             .presentationDetents([.large])
             .presentationDragIndicator(.hidden)
         }
+    }
+    
+    private func limparCampos() {
+        titulo = ""
+        usuario = ""
+        senha = ""
+        site = ""
+        tipoSelecionado = .senha
     }
 }
 

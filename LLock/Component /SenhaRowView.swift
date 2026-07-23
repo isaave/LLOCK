@@ -45,9 +45,7 @@ struct SenhaRowView: View {
                 }
                 .buttonStyle(.plain)
                 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(Color.gray.opacity(0.5))
+                
             }
         }
         .padding(.vertical, 4)

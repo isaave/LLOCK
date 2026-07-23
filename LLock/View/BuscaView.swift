@@ -8,30 +8,28 @@
 import SwiftUI
 
 struct BuscaView: View {
+    @EnvironmentObject var gerenciador: GerenciadorDeSenhas
     @Binding var textoBusca: String
     
-    // Lista simulada de senhas cadastradas para teste de busca
-    @State private var senhasExemplo: [String] = [
-        "Google", "Github", "Apple ID", "Netflix", "Spotify", "Amazon"
-    ]
-    
-    var resultados: [String] {
+    var resultados: [SenhaItem] {
         if textoBusca.isEmpty {
             return []
         } else {
-            return senhasExemplo.filter { $0.localizedCaseInsensitiveContains(textoBusca) }
+            return gerenciador.ativas.filter {
+                $0.nome.localizedCaseInsensitiveContains(textoBusca) ||
+                $0.usuario.localizedCaseInsensitiveContains(textoBusca) ||
+                $0.site.localizedCaseInsensitiveContains(textoBusca)
+            }
         }
     }
     
     var body: some View {
         Group {
             if textoBusca.isEmpty {
-                // MARK: - Estado Inicial (Vazio)
                 VStack {
                     Spacer()
                     
                     VStack(spacing: 16) {
-                        // Ícone da Lupa com Círculo
                         ZStack {
                             Circle()
                                 .fill(Color.orange.opacity(0.08))
@@ -42,13 +40,6 @@ struct BuscaView: View {
                                 .foregroundColor(.orange)
                         }
                         
-                        // Título
-                        Text("Procurar")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(Color("H1"))
-                        
-                        // Descrição
                         Text("Digite o nome do serviço, e-mail ou usuário\npara localizar sua credencial.")
                             .font(.subheadline)
                             .multilineTextAlignment(.center)
@@ -60,20 +51,39 @@ struct BuscaView: View {
                     Spacer()
                 }
             } else if resultados.isEmpty {
-                // MARK: - Estado Sem Resultados Nativo
                 ContentUnavailableView.search(text: textoBusca)
             } else {
-                // MARK: - Lista de Resultados
-                List(resultados, id: \.self) { item in
-                    Text(item)
+                VStack(spacing: 0) {
+                    HStack {
+                        Text("Buscar")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("H1"))
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    .padding(.bottom, 8)
+                    
+                    List(resultados) { item in
+                        NavigationLink(destination: DetalheSenhaView(item: item)) {
+                            SenhaRowView(item: item) {
+                                gerenciador.alternarFavorito(item)
+                            }
+                        }
+                        .listRowBackground(Color.clear)
+                    }
+                    .listStyle(.plain)
                 }
-                .listStyle(.plain)
             }
         }
     }
 }
 
 #Preview {
-    BuscaView(textoBusca: .constant(""))
-        .environmentObject(AppManager())
+    NavigationStack {
+        BuscaView(textoBusca: .constant(""))
+            .environmentObject(AppManager())
+            .environmentObject(GerenciadorDeSenhas())
+    }
 }

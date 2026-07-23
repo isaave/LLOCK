@@ -5,7 +5,6 @@
 //  Created by Isabella Avelina on 21/07/26.
 //
 
-// SenhaItem.swift
 import Foundation
 
 enum TipoSenha: String {
@@ -22,5 +21,7 @@ struct SenhaItem: Identifiable {
     var iconeSistema: String = "lock.fill"
     var isFavorito: Bool = false
     var isApagada: Bool = false
-    var tipo: TipoSenha = .senha // 👈 novo campo
+    var tipo: TipoSenha = .senha
+    var dataCriacao: Date = Date()
+    var dataEdicao: Date = Date()
 }
