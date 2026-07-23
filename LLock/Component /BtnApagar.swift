@@ -20,9 +20,8 @@ struct BtnApagar: View {
                 .foregroundColor(.red)
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
-                .background(Color(.systemBackground))
                 .clipShape(Capsule())
-                .glassEffect(.regular)
+                .glassEffect()
         }
         .buttonStyle(PlainButtonStyle())
     }

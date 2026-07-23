@@ -19,18 +19,13 @@ class GerenciadorDeSenhas: ObservableObject {
     func atualizar(_ item: SenhaItem) {
         guard let index = senhas.firstIndex(where: { $0.id == item.id }) else { return }
         var atualizado = item
-        atualizado.dataEdicao = Date() // 👈 registra quando foi editado
+        atualizado.dataEdicao = Date()
         senhas[index] = atualizado
     }
     
     func alternarFavorito(_ item: SenhaItem) {
         guard let index = senhas.firstIndex(where: { $0.id == item.id }) else { return }
         senhas[index].isFavorito.toggle()
-    }
-    
-    func moverParaLixeira(_ item: SenhaItem) {
-        guard let index = senhas.firstIndex(where: { $0.id == item.id }) else { return }
-        senhas[index].isApagada = true
     }
     
     func restaurar(_ item: SenhaItem) {
@@ -91,5 +86,11 @@ class GerenciadorDeSenhas: ObservableObject {
         }
         
         return String(senha.shuffled())
+    }
+    
+    func moverParaLixeira(_ item: SenhaItem) {
+        guard let index = senhas.firstIndex(where: { $0.id == item.id }) else { return }
+        senhas[index].isApagada = true
+        senhas[index].isFavorito = false
     }
 }

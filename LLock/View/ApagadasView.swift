@@ -131,6 +131,7 @@ struct ApagadasView: View {
                     .listStyle(.plain)
                     .listSectionIndexVisibility(.visible)
                     
+                    // MARK: - Barra Inferior (modo seleção)
                     if modoSelecao {
                         HStack {
                             Text("\(selecionados.count) selecionada(s)")
@@ -139,13 +140,23 @@ struct ApagadasView: View {
                             
                             Spacer()
                             
+                            Button {
+                                restaurarSelecionadas()
+                            } label: {
+                                Text("Restaurar")
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.green)
+                            }
+                            .disabled(selecionados.isEmpty)
+                            
                             Button(role: .destructive) {
                                 mostrarConfirmacaoApagarSelecionadas = true
                             } label: {
-                                Text("Apagar Selecionadas")
+                                Text("Apagar")
                                     .fontWeight(.semibold)
                             }
                             .disabled(selecionados.isEmpty)
+                            .padding(.leading, 16)
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
@@ -176,6 +187,14 @@ struct ApagadasView: View {
         } else {
             selecionados.insert(item.id)
         }
+    }
+    
+    private func restaurarSelecionadas() {
+        for item in gerenciador.apagadas where selecionados.contains(item.id) {
+            gerenciador.restaurar(item)
+        }
+        selecionados.removeAll()
+        modoSelecao = false
     }
 }
 

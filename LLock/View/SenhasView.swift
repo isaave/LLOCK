@@ -17,7 +17,7 @@ struct SenhasView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var gerenciador: GerenciadorDeSenhas
     
-    @State private var filtroSelecionado: Int = 0 
+    @State private var filtroSelecionado: Int = 0
     @State private var criterioOrdenacao: CriterioOrdenacao = .titulo
     @State private var ordemCrescente: Bool = true
     
@@ -140,6 +140,7 @@ struct SenhasView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .listSectionSpacing(.compact)
                     .listSectionIndexVisibility(.visible)
                     
                 } else {
@@ -155,6 +156,7 @@ struct SenhasView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .listSectionSpacing(.compact)
                 }
             }
         }

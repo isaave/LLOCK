@@ -81,6 +81,7 @@ struct BtnMais: View {
                                     .font(.system(size: 28, weight: .medium))
                                     .multilineTextAlignment(.center)
                                     .foregroundColor(.gray)
+                                    .lineLimit(1)
                             }
                             .padding(.top, 16)
                             .padding(.bottom, 10)
@@ -89,12 +90,14 @@ struct BtnMais: View {
                                 HStack {
                                     Text("Nome de Usuário")
                                         .foregroundColor(.primary)
+                                        .fixedSize(horizontal: true, vertical: false)
                                     Spacer()
                                     TextField("usuário", text: $usuario)
                                         .multilineTextAlignment(.trailing)
                                         .foregroundColor(.gray)
                                         .textInputAutocapitalization(.never)
                                         .textContentType(.username)
+                                        .lineLimit(1)
                                 }
                                 .padding(.vertical, 5)
                                 Divider()
@@ -103,11 +106,13 @@ struct BtnMais: View {
                             HStack {
                                 Text(tipoSelecionado == .wifi ? "Senha da Rede" : "Senha")
                                     .foregroundColor(.primary)
+                                    .fixedSize(horizontal: true, vertical: false)
                                 Spacer()
                                 SecureField("Senha necessária", text: $senha)
                                     .multilineTextAlignment(.trailing)
                                     .foregroundColor(.gray)
                                     .textContentType(.newPassword)
+                                    .lineLimit(1)
                             }
                             .padding(.vertical, 12)
                             Divider()
@@ -115,6 +120,7 @@ struct BtnMais: View {
                             HStack {
                                 Text(tipoSelecionado == .wifi ? "Segurança" : "Site")
                                     .foregroundColor(.primary)
+                                    .fixedSize(horizontal: true, vertical: false)
                                 Spacer()
                                 TextField(tipoSelecionado == .wifi ? "WPA2 Pessoal" : "example.com", text: $site)
                                     .multilineTextAlignment(.trailing)
@@ -122,6 +128,8 @@ struct BtnMais: View {
                                     .keyboardType(tipoSelecionado == .wifi ? .default : .URL)
                                     .textInputAutocapitalization(.never)
                                     .textContentType(tipoSelecionado == .wifi ? nil : .URL)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
                             }
                             .padding(.vertical, 12)
                         }
@@ -134,10 +142,6 @@ struct BtnMais: View {
                 }
                 
                 Spacer(minLength: 16)
-                
-                
-                .padding(.horizontal, 20)
-                .padding(.bottom, 16)
             }
             .presentationDetents([.large])
             .presentationDragIndicator(.hidden)

@@ -66,6 +66,14 @@ struct DetalheSenhaView: View {
                             }
                             .padding(.horizontal, 16)
                             .padding(.vertical, 12)
+                            .contentShape(Rectangle())
+                            .contextMenu {
+                                Button {
+                                    copiar(item.senha)
+                                } label: {
+                                    Label("Copiar Senha", systemImage: "doc.on.doc")
+                                }
+                            }
                             
                             Divider().padding(.leading, 16)
                             
@@ -73,13 +81,12 @@ struct DetalheSenhaView: View {
                             
                             Divider().padding(.leading, 16)
                             
-                            linhaInfo(titulo: "Modificação", valor: "19 de fev. de 2026")
+                            linhaInfo(titulo: "Modificação", valor: item.dataEdicao.formatted(date: .abbreviated, time: .omitted), copiavel: false)
                         }
                         .padding(.bottom, 8)
                     }
-                    .background(Color(.systemBackground))
+                    .background(Color("BackgroudCard"))
                     .cornerRadius(24)
-                    .shadow(color: Color.black.opacity(0.03), radius: 10, x: 0, y: 4)
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
                     
@@ -117,9 +124,8 @@ struct DetalheSenhaView: View {
                             }
                         }
                         .padding(16)
-                        .background(Color(.systemBackground))
+                        .background(Color("BackgroudCard"))
                         .cornerRadius(20)
-                        .shadow(color: Color.black.opacity(0.03), radius: 8, x: 0, y: 2)
                         .padding(.horizontal, 20)
                     }
                 }
@@ -134,7 +140,6 @@ struct DetalheSenhaView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 16)
         }
-        .background(Color(.systemGroupedBackground).ignoresSafeArea())
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 BtnEditar {
@@ -158,7 +163,7 @@ struct DetalheSenhaView: View {
         }
     }
     
-    private func linhaInfo(titulo: String, valor: String) -> some View {
+    private func linhaInfo(titulo: String, valor: String, copiavel: Bool = true) -> some View {
         HStack {
             Text(titulo)
                 .font(.subheadline)
@@ -170,6 +175,22 @@ struct DetalheSenhaView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .contentShape(Rectangle())
+        .contextMenu {
+            if copiavel {
+                Button {
+                    copiar(valor)
+                } label: {
+                    Label("Copiar", systemImage: "doc.on.doc")
+                }
+            }
+        }
+    }
+    
+    private func copiar(_ texto: String) {
+        UIPasteboard.general.string = texto
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
     }
 }
 
@@ -177,10 +198,10 @@ struct DetalheSenhaView: View {
     NavigationStack {
         DetalheSenhaView(
             item: SenhaItem(
-                nome: "",
-                usuario: "",
-                senha: "",
-                site: ""
+                nome: "Instagram",
+                usuario: "talita.silva98",
+                senha: "123456",
+                site: "instagram.com"
             )
         )
         .environmentObject(GerenciadorDeSenhas())
