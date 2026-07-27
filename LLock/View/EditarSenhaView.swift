@@ -193,11 +193,13 @@ struct EditarSenhaView: View {
     }
 }
 
-#Preview {
+private func previewGerenciador() -> GerenciadorDeSenhas {
     let gerenciador = GerenciadorDeSenhas()
-    let itemExemplo = SenhaItem(nome: "Netflix", usuario: "usuario", senha: "12345678", site: "netflix.com")
-    gerenciador.senhas = [itemExemplo]
-    
-    return EditarSenhaView(item: itemExemplo)
-        .environmentObject(gerenciador)
+    gerenciador.adicionar(nome: "Netflix", usuario: "usuario", senha: "12345678", site: "netflix.com")
+    return gerenciador
+}
+
+#Preview {
+    EditarSenhaView(item: previewGerenciador().senhas[0])
+        .environmentObject(previewGerenciador())
 }
