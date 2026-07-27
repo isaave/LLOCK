@@ -16,8 +16,7 @@ struct BtnEditar: View {
             action?()
         }) {
             Text(titulo)
-                .font(Font.custom("SF Pro Text", size: 16).weight(.medium))
-                .foregroundColor(Color("BtnColor liquid glass"))
+                .font(.system(size: 16, weight: .medium))                .foregroundColor(Color("BtnColor liquid glass"))
                 .padding(.horizontal, 16)
                 .frame(height: 40)
                 .clipShape(Capsule())

@@ -15,8 +15,7 @@ struct BtnCancelar: View {
             action?()
         }) {
             Image(systemName: "xmark")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundColor(Color("BtnColor liquid glass"))
+                .font(.system(size: 16, weight: .medium))                .foregroundColor(Color("BtnColor liquid glass"))
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
                 .glassEffect()

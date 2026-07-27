@@ -35,8 +35,7 @@ struct BtnMais: View {
             mostrarSheet = true
         }) {
             Image(systemName: "plus")
-                .font(Font.custom("SF Pro Text", size: 20).weight(.medium))
-                .foregroundColor(Color("BtnColor liquid glass"))
+                .font(.system(size: 16, weight: .medium))                .foregroundColor(Color("BtnColor liquid glass"))
                 .frame(width: 36, height: 36)
                 .glassEffect()
         }

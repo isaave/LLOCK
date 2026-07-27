@@ -11,12 +11,35 @@ struct DetalheSenhaView: View {
     @EnvironmentObject var gerenciador: GerenciadorDeSenhas
     @Environment(\.dismiss) var dismiss
     
-    let item: SenhaItem
+    let itemID: UUID
     @State private var mostrarSenha: Bool = false
     @State private var mostrarConfirmacaoApagar: Bool = false
     @State private var mostrarEdicao: Bool = false
+    @State private var gatilhoFeedback: Bool = false // Gatilho SwiftUI nativo
+    
+    init(item: SenhaItem) {
+        self.itemID = item.id
+    }
+    
+    private var item: SenhaItem? {
+        gerenciador.senhas.first(where: { $0.id == itemID })
+    }
     
     var body: some View {
+        Group {
+            if let item {
+                conteudo(item)
+            } else {
+                Color.clear
+                    .onAppear { dismiss() }
+            }
+        }
+        // Feedback tátil SwiftUI puramente nativo
+        .sensoryFeedback(.success, trigger: gatilhoFeedback)
+    }
+    
+    @ViewBuilder
+    private func conteudo(_ item: SenhaItem) -> some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: 20) {
@@ -189,8 +212,7 @@ struct DetalheSenhaView: View {
     
     private func copiar(_ texto: String) {
         UIPasteboard.general.string = texto
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+        gatilhoFeedback.toggle() 
     }
 }
 

@@ -10,6 +10,25 @@ import SwiftUI
 struct SegurancaView: View {
     @EnvironmentObject var gerenciador: GerenciadorDeSenhas
     
+    @State private var criterioOrdenacao: CriterioOrdenacao = .titulo
+    @State private var ordemCrescente: Bool = true
+    
+    var problemasOrdenados: [SenhaItem] {
+        let base = gerenciador.senhasComProblema
+        
+        switch criterioOrdenacao {
+        case .titulo:
+            return base.sorted {
+                let comparacao = $0.nome.localizedCaseInsensitiveCompare($1.nome)
+                return ordemCrescente ? comparacao == .orderedAscending : comparacao == .orderedDescending
+            }
+        case .dataEdicao:
+            return base.sorted { ordemCrescente ? $0.dataEdicao < $1.dataEdicao : $0.dataEdicao > $1.dataEdicao }
+        case .dataCriacao:
+            return base.sorted { ordemCrescente ? $0.dataCriacao < $1.dataCriacao : $0.dataCriacao > $1.dataCriacao }
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -82,13 +101,20 @@ struct SegurancaView: View {
                         
                         Spacer()
                         
-                        BtnFiltrar(onTitulo: { print("Opções") })                    }
+                        BtnFiltrar(
+                            onDecrescente: { ordemCrescente = false },
+                            onCrescente: { ordemCrescente = true },
+                            onDataEdicao: { criterioOrdenacao = .dataEdicao },
+                            onDataCriacao: { criterioOrdenacao = .dataCriacao },
+                            onTitulo: { criterioOrdenacao = .titulo }
+                        )
+                    }
                     .padding(.horizontal)
                     .padding(.top, 8)
                     .padding(.bottom, 8)
                     
                     List {
-                        ForEach(gerenciador.senhasComProblema) { item in
+                        ForEach(problemasOrdenados) { item in
                             NavigationLink(destination: DetalheSenhaView(item: item)) {
                                 LinhaProblemaSeguranca(item: item, gerenciador: gerenciador)
                             }

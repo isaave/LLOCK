@@ -15,8 +15,7 @@ struct BtnCheck: View {
             action?()
         }) {
             Image(systemName: "checkmark")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundColor(.white)
+                .font(.system(size: 16, weight: .medium))                .foregroundColor(.white)
                 .padding(.horizontal, 16)
                 .frame(height: 40)
                 .background(Color("BtnColor"))

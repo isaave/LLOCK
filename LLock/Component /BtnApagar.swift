@@ -16,8 +16,7 @@ struct BtnApagar: View {
             action?()
         }) {
             Text(titulo)
-                .font(Font.custom("SF Pro Text", size: 16).weight(.medium))
-                .foregroundColor(.red)
+                .font(.system(size: 16, weight: .medium))                .foregroundColor(.red)
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
                 .clipShape(Capsule())

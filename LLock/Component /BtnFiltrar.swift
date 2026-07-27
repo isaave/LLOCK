@@ -37,9 +37,8 @@ struct BtnFiltrar: View {
             }
         } label: {
             Image(systemName: "ellipsis")
-                .font(Font.custom("SF Pro Text", size: 20).weight(.medium))
-                .foregroundColor(Color("BtnColor liquid glass"))
-                .frame(width: 36, height: 36) 
+                .font(.system(size: 16, weight: .medium))                .foregroundColor(Color("BtnColor liquid glass"))
+                .frame(width: 36, height: 36)
                 .glassEffect()
         }
         .buttonStyle(PlainButtonStyle())

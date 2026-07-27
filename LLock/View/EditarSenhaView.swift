@@ -29,6 +29,15 @@ struct EditarSenhaView: View {
         _tipoSelecionado = State(initialValue: item.tipo)
     }
     
+    private var formularioValido: Bool {
+        let tituloValido = !titulo.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let senhaValida = !senha.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let siteValido = !site.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let usuarioValido = tipoSelecionado == .wifi || !usuario.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        
+        return tituloValido && senhaValida && siteValido && usuarioValido
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -40,14 +49,16 @@ struct EditarSenhaView: View {
                 
                 BtnCheck {
                     var atualizado = item
-                    atualizado.nome = titulo
-                    atualizado.usuario = usuario
+                    atualizado.nome = titulo.trimmingCharacters(in: .whitespacesAndNewlines)
+                    atualizado.usuario = usuario.trimmingCharacters(in: .whitespacesAndNewlines)
                     atualizado.senha = senha
-                    atualizado.site = site
+                    atualizado.site = site.trimmingCharacters(in: .whitespacesAndNewlines)
                     atualizado.tipo = tipoSelecionado
                     gerenciador.atualizar(atualizado)
                     dismiss()
                 }
+                .disabled(!formularioValido)
+                .opacity(formularioValido ? 1 : 0.4)
             }
             .padding(.horizontal, 20)
             .padding(.top, 16)
@@ -70,6 +81,7 @@ struct EditarSenhaView: View {
                             .font(.system(size: 24, weight: .bold))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.primary)
+                            .lineLimit(1)
                     }
                     .padding(.top, 12)
                     .padding(.bottom, 8)
@@ -80,12 +92,14 @@ struct EditarSenhaView: View {
                                 Text("Nome de Usuário")
                                     .font(.system(size: 15))
                                     .foregroundColor(.primary)
+                                    .fixedSize(horizontal: true, vertical: false)
                                 Spacer()
                                 TextField("usuário", text: $usuario)
                                     .multilineTextAlignment(.trailing)
                                     .font(.system(size: 15))
                                     .foregroundColor(.secondary)
                                     .textInputAutocapitalization(.never)
+                                    .lineLimit(1)
                             }
                             Divider()
                         }
@@ -94,11 +108,13 @@ struct EditarSenhaView: View {
                             Text(tipoSelecionado == .wifi ? "Senha da Rede" : "Senha")
                                 .font(.system(size: 15))
                                 .foregroundColor(.primary)
+                                .fixedSize(horizontal: true, vertical: false)
                             Spacer()
                             SecureField("senha", text: $senha)
                                 .multilineTextAlignment(.trailing)
                                 .font(.system(size: 15))
                                 .foregroundColor(.secondary)
+                                .lineLimit(1)
                         }
                         Divider()
                         
@@ -106,12 +122,15 @@ struct EditarSenhaView: View {
                             Text(tipoSelecionado == .wifi ? "Segurança" : "Site")
                                 .font(.system(size: 15))
                                 .foregroundColor(.primary)
+                                .fixedSize(horizontal: true, vertical: false)
                             Spacer()
                             TextField(tipoSelecionado == .wifi ? "WPA2 Pessoal" : "example.com", text: $site)
                                 .multilineTextAlignment(.trailing)
                                 .font(.system(size: 15))
                                 .foregroundColor(.secondary)
                                 .textInputAutocapitalization(.never)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                         }
                         Divider()
                         
@@ -120,7 +139,7 @@ struct EditarSenhaView: View {
                                 .font(.system(size: 15))
                                 .foregroundColor(.primary)
                             Spacer()
-                            Text("19 de fev. de 2026")
+                            Text(item.dataEdicao.formatted(date: .abbreviated, time: .omitted))
                                 .font(.system(size: 15))
                                 .foregroundColor(.secondary)
                         }
