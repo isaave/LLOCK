@@ -11,7 +11,7 @@ struct EditarSenhaView: View {
     @EnvironmentObject var gerenciador: GerenciadorDeSenhas
     @Environment(\.dismiss) var dismiss
     
-    let item: SenhaItem
+    let itemID: UUID
     
     @State private var titulo: String
     @State private var usuario: String
@@ -21,12 +21,18 @@ struct EditarSenhaView: View {
     @State private var mostrarConfirmacaoApagar: Bool = false
     
     init(item: SenhaItem) {
-        self.item = item
+        self.itemID = item.id
         _titulo = State(initialValue: item.nome)
         _usuario = State(initialValue: item.usuario)
         _senha = State(initialValue: item.senha)
         _site = State(initialValue: item.site)
         _tipoSelecionado = State(initialValue: item.tipo)
+    }
+    
+    /// Sempre busca a versão mais atual do item no gerenciador,
+    /// em vez de depender de uma cópia congelada no momento da abertura do sheet.
+    private var item: SenhaItem? {
+        gerenciador.senhas.first(where: { $0.id == itemID })
     }
     
     private var formularioValido: Bool {
@@ -39,6 +45,19 @@ struct EditarSenhaView: View {
     }
     
     var body: some View {
+        Group {
+            if let item {
+                conteudo(item)
+            } else {
+                // O item não existe mais (foi excluído em outro lugar enquanto o sheet estava aberto).
+                Color.clear
+                    .onAppear { dismiss() }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func conteudo(_ item: SenhaItem) -> some View {
         VStack(spacing: 0) {
             HStack {
                 BtnCancelar {
@@ -175,6 +194,10 @@ struct EditarSenhaView: View {
 }
 
 #Preview {
-    EditarSenhaView(item: SenhaItem(nome: "", usuario: "", senha: "", site: ""))
-        .environmentObject(GerenciadorDeSenhas())
+    let gerenciador = GerenciadorDeSenhas()
+    let itemExemplo = SenhaItem(nome: "Netflix", usuario: "usuario", senha: "12345678", site: "netflix.com")
+    gerenciador.senhas = [itemExemplo]
+    
+    return EditarSenhaView(item: itemExemplo)
+        .environmentObject(gerenciador)
 }

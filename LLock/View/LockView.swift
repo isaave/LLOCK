@@ -5,6 +5,8 @@ struct LockView: View {
     @EnvironmentObject var appManager: AppManager
     
     @State private var isUnlockedSuccess: Bool = false
+    @State private var mostrarErro: Bool = false
+    @State private var mensagemErro: String = ""
     
     var body: some View {
         ZStack {
@@ -25,7 +27,7 @@ struct LockView: View {
                         .scaledToFit()
                         .opacity(isUnlockedSuccess ? 1 : 0)
                 }
-                .frame(width: 272, height: 276) 
+                .frame(width: 272, height: 276)
 
                 VStack(spacing: 6) {
                     Text("O LLOCK ESTÁ")
@@ -54,6 +56,11 @@ struct LockView: View {
                 }
             }
         }
+        .alert("Não foi possível desbloquear", isPresented: $mostrarErro) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(mensagemErro)
+        }
     }
     
     func authenticateUser() {
@@ -77,13 +84,38 @@ struct LockView: View {
                         }
                         
                     } else {
-                        print("Erro ao autenticar")
+                        self.exibirErroSeNecessario(authenticationError)
                     }
                 }
             }
         } else {
-            print("Biometria indisponível: \(error?.localizedDescription ?? "")")
+            mensagemErro = "Configure o Face ID ou Touch ID nos Ajustes do seu iPhone para desbloquear o LLock."
+            mostrarErro = true
         }
+    }
+    
+    private func exibirErroSeNecessario(_ erro: Error?) {
+        guard let laError = erro as? LAError else {
+            mensagemErro = "Não foi possível autenticar. Tente novamente."
+            mostrarErro = true
+            return
+        }
+        
+        switch laError.code {
+        case .userCancel, .appCancel, .systemCancel:
+            // O usuário cancelou de propósito — não precisa de alerta.
+            return
+        case .userFallback:
+            mensagemErro = "Use o código do dispositivo para desbloquear."
+        case .biometryNotEnrolled:
+            mensagemErro = "Nenhum Face ID ou Touch ID configurado neste dispositivo."
+        case .biometryLockout:
+            mensagemErro = "Muitas tentativas incorretas. Desbloqueie o dispositivo com o código para reativar a biometria."
+        default:
+            mensagemErro = "Não foi possível autenticar. Tente novamente."
+        }
+        
+        mostrarErro = true
     }
 }
 

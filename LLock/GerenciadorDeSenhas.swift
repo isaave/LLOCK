@@ -8,8 +8,8 @@
 import SwiftUI
 import Combine
 
-class GerenciadorDeSenhas: ObservableObject {
-    @Published var senhas: [SenhaItem] = []
+final class GerenciadorDeSenhas: ObservableObject {
+    @Published private(set) var senhas: [SenhaItem] = []
     
     func adicionar(nome: String, usuario: String, senha: String, site: String, tipo: TipoSenha = .senha) {
         let nova = SenhaItem(nome: nome, usuario: usuario, senha: senha, site: site, tipo: tipo)
