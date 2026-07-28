@@ -20,7 +20,6 @@ struct BtnMais: View {
     
     let nomeDoAssetMascote: String = "Icone"
     
-    // MARK: - Validação
     private var formularioValido: Bool {
         let tituloValido = !titulo.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         let senhaValida = !senha.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty

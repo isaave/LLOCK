@@ -29,8 +29,7 @@ struct EditarSenhaView: View {
         _tipoSelecionado = State(initialValue: item.tipo)
     }
     
-    /// Sempre busca a versão mais atual do item no gerenciador,
-    /// em vez de depender de uma cópia congelada no momento da abertura do sheet.
+    
     private var item: SenhaItem? {
         gerenciador.senhas.first(where: { $0.id == itemID })
     }
@@ -49,7 +48,6 @@ struct EditarSenhaView: View {
             if let item {
                 conteudo(item)
             } else {
-                // O item não existe mais (foi excluído em outro lugar enquanto o sheet estava aberto).
                 Color.clear
                     .onAppear { dismiss() }
             }

@@ -131,7 +131,6 @@ struct ApagadasView: View {
                     .listStyle(.plain)
                     .listSectionIndexVisibility(.visible)
                     
-                    // MARK: - Barra Inferior (modo seleção)
                     if modoSelecao {
                         HStack {
                             Text("\(selecionados.count) selecionada(s)")

@@ -103,7 +103,6 @@ struct LockView: View {
         
         switch laError.code {
         case .userCancel, .appCancel, .systemCancel:
-            // O usuário cancelou de propósito — não precisa de alerta.
             return
         case .userFallback:
             mensagemErro = "Use o código do dispositivo para desbloquear."

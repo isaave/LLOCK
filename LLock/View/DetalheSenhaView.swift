@@ -15,7 +15,7 @@ struct DetalheSenhaView: View {
     @State private var mostrarSenha: Bool = false
     @State private var mostrarConfirmacaoApagar: Bool = false
     @State private var mostrarEdicao: Bool = false
-    @State private var gatilhoFeedback: Bool = false // Gatilho SwiftUI nativo
+    @State private var gatilhoFeedback: Bool = false 
     
     init(item: SenhaItem) {
         self.itemID = item.id
@@ -34,7 +34,6 @@ struct DetalheSenhaView: View {
                     .onAppear { dismiss() }
             }
         }
-        // Feedback tátil SwiftUI puramente nativo
         .sensoryFeedback(.success, trigger: gatilhoFeedback)
     }
     
