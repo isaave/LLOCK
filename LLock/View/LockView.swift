@@ -8,52 +8,70 @@ struct LockView: View {
     @State private var mostrarErro: Bool = false
     @State private var mensagemErro: String = ""
     
+    private let backgroundColor = Color("BackGroud")
+    private let textColor = Color.primary
+    
     var body: some View {
         ZStack {
-            Color("BackGroud")
+            backgroundColor
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 0) {
+                
                 Spacer()
                 
+                // --- Mascote e Confetes ---
                 ZStack {
-                    Image("LLock.mascotetrancado")
-                        .resizable()
-                        .scaledToFit()
-                        .opacity(isUnlockedSuccess ? 0 : 1)
+                    if isUnlockedSuccess {
+                        // Image("LLock.confetes")
+                        //     .resizable()
+                        //     .scaledToFit()
+                    }
                     
-                    Image("LLock.mascotedestracado")
-                        .resizable()
-                        .scaledToFit()
-                        .opacity(isUnlockedSuccess ? 1 : 0)
+                    ZStack {
+                        Image("LLock.mascotetrancado")
+                            .resizable()
+                            .scaledToFit()
+                            .opacity(isUnlockedSuccess ? 0 : 1)
+                        
+                        Image("LLock.mascotedestracado")
+                            .resizable()
+                            .scaledToFit()
+                            .opacity(isUnlockedSuccess ? 1 : 0)
+                    }
+                    .animation(.easeInOut(duration: 0.3), value: isUnlockedSuccess)
                 }
                 .frame(width: 272, height: 276)
-
-                VStack(spacing: 6) {
-                    Text("O LLOCK ESTÁ")
-                    Text(isUnlockedSuccess ? "DESBLOQUEADO" : "BLOQUEADO")
-                }
-                .font(
-                    Font.custom("Fredoka", size: 40)
-                    .weight(.medium)
-                )
-                .foregroundColor(Color("H2"))
-                .frame(width: 359, height: 152, alignment: .top)
-                .multilineTextAlignment(.center)
                 
-                if !isUnlockedSuccess {
-                    BtnDesbloquear(
-                        title: "Desbloquear",
-                        backgroundColorName: "BtnColor"
-                    ) {
-                        authenticateUser()
+                // --- Texto e Botão ---
+                VStack(spacing: 20) {
+                    
+                    Text(isUnlockedSuccess ? "" : "O LLock está\nbloqueado")
+                        .font(Font.custom("Fredoka", size: 36).weight(.medium))
+                        .foregroundColor(textColor)
+                        .multilineTextAlignment(.center)
+                        .id(isUnlockedSuccess)
+                        .transition(.opacity)
+                    
+                    if !isUnlockedSuccess {
+                        BtnDesbloquear(
+                            title: "Desbloquear",
+                            backgroundColorName: "BtnColor"
+                        ) {
+                            authenticateUser()
+                        }
+                        .padding(.horizontal, 40)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                    } else {
+                        Spacer()
+                            .frame(height: 60)
                     }
-                    .padding(.bottom, 100)
-                    .transition(.opacity)
-                } else {
-                    Spacer()
-                        .frame(height: 150)
                 }
+                .frame(height: 200)
+                .animation(.easeInOut, value: isUnlockedSuccess)
+                .padding(.top, 24)
+                
+                Spacer()
             }
         }
         .alert("Não foi possível desbloquear", isPresented: $mostrarErro) {
@@ -77,12 +95,11 @@ struct LockView: View {
                             self.isUnlockedSuccess = true
                         }
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             withAnimation(.easeInOut) {
                                 appManager.currentView = .home
                             }
                         }
-                        
                     } else {
                         self.exibirErroSeNecessario(authenticationError)
                     }
